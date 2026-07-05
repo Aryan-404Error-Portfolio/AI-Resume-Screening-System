@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environment
+venv/
+.env
+
+# VS Code
+.vscode/
+
+# Database (optional)
+*.db
+
+# Uploads
+uploads/*
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+.env.local
