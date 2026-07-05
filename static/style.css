@@ -1,0 +1,69 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f6f9;
+}
+
+.container{
+    max-width: 1000px;
+}
+
+.card{
+    border-radius: 10px;
+    border: none;
+}
+
+.card-header{
+    border-radius: 10px 10px 0 0 !important;
+}
+
+h1,h2{
+    font-weight: 600;
+}
+
+label{
+    font-weight: 600;
+}
+
+.form-control{
+    border-radius: 6px;
+}
+
+.form-control:focus{
+    box-shadow: none;
+    border-color: #0d6efd;
+}
+
+.btn{
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.table{
+    margin-top: 20px;
+}
+
+.table th{
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table td{
+    vertical-align: middle;
+}
+
+.badge{
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+.text-success{
+    font-weight: 500;
+}
+
+.text-danger{
+    font-weight: 500;
+}
+
+.shadow{
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.12) !important;
+}
