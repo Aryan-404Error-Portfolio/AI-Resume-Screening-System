@@ -1,3 +1,13 @@
+---
+title: AI Resume Screening
+emoji: 🤖
+colorFrom: blue
+colorTo: purple
+sdk: docker
+app_file: app.py
+pinned: false
+---
+
 # AI-Powered Resume Screening & Candidate Ranking System
 
 ## Overview
