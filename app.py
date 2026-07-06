@@ -1,5 +1,3 @@
-import time
-time.sleep(5)  
 import os
 import logging
 from logging.handlers import RotatingFileHandler
@@ -173,11 +171,27 @@ def analyze():
         description: Server error
     """
     try:
+        # DEBUG: Log all form data to see what's coming
+        app.logger.info(f"Request method: {request.method}")
+        app.logger.info(f"Request content type: {request.content_type}")
+        app.logger.info(f"Form keys: {list(request.form.keys())}")
+        app.logger.info(f"Files keys: {list(request.files.keys())}")
+
         resumes = request.files.getlist("resumes")
+        
+        # Try multiple ways to get job_description (proxy compatibility)
         job_description = request.form.get("job_description", "")
+        if not job_description:
+            job_description = request.values.get("job_description", "")
+        if not job_description:
+            # Try reading from request data directly
+            job_description = request.args.get("job_description", "")
+
+        app.logger.info(f"Job description length: {len(job_description)}")
+        app.logger.info(f"Job description preview: {job_description[:100]}")
 
         # Input validation
-        if not job_description:
+        if not job_description or job_description.strip() == "":
             app.logger.warning("No job description provided")
             return "Job description is required", 400
 
