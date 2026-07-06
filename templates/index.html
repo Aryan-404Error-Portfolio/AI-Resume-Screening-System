@@ -19,25 +19,39 @@
 
         <div class="card-header bg-primary text-white text-center">
             <h2>AI Resume Screening System</h2>
-            <p class="mb-0">Paste resume text and compare with Job Description using AI</p>
+            <p class="mb-0">Upload resumes or paste text to compare with Job Description using AI</p>
         </div>
 
         <div class="card-body p-4">
 
-            <form action="{{ url_for('analyze') }}" method="POST">
+            <form action="{{ url_for('analyze') }}" method="POST" enctype="multipart/form-data">
 
                 <div class="mb-4">
 
                     <label class="form-label fw-bold">
-                        Resume Text
+                        Upload Resume(s) (PDF/DOCX) — Optional
+                    </label>
+
+                    <input
+                        type="file"
+                        name="resumes"
+                        class="form-control"
+                        multiple
+                        accept=".pdf,.doc,.docx">
+
+                </div>
+
+                <div class="mb-4">
+
+                    <label class="form-label fw-bold">
+                        OR Paste Resume Text — Optional
                     </label>
 
                     <textarea
                         class="form-control"
                         name="resume_text"
-                        rows="10"
-                        placeholder="Paste the full resume text here..."
-                        required></textarea>
+                        rows="6"
+                        placeholder="Paste resume text here if not uploading file..."></textarea>
 
                 </div>
 

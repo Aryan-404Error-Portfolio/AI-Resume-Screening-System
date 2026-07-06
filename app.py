@@ -148,14 +148,20 @@ def home():
 @app.route("/analyze", methods=["POST"])
 def analyze():
     """
-    Analyze resume text against job description.
-    Supports both file upload (local) and pasted text (live).
+    Analyze resume(s) against job description.
+    Supports both file upload and pasted text.
     ---
     parameters:
+      - name: resumes
+        in: formData
+        type: file
+        required: false
+        description: Resume files (PDF/DOCX)
+        collectionFormat: multi
       - name: resume_text
         in: formData
         type: string
-        required: true
+        required: false
         description: Pasted resume text
       - name: job_description
         in: formData
@@ -171,39 +177,49 @@ def analyze():
         description: Server error
     """
     try:
-        # Read form data (works with plain POST, no multipart needed)
+        # Read job description
         job_description = request.form.get("job_description", "").strip()
-        resume_text = request.form.get("resume_text", "").strip()
 
-        app.logger.info(f"JD length: {len(job_description)}")
-        app.logger.info(f"Resume text length: {len(resume_text)}")
+        app.logger.info(f"Request method: {request.method}")
+        app.logger.info(f"Content type: {request.content_type}")
+        app.logger.info(f"Job description length: {len(job_description)}")
 
-        # Input validation
+        # Validate job description
         if not job_description:
             app.logger.warning("No job description provided")
             return "Job description is required", 400
 
-        if not resume_text:
-            # Fallback: try file upload (for local use)
-            resumes = request.files.getlist("resumes")
-            if resumes and any(r.filename for r in resumes):
-                app.logger.info("Using file upload fallback")
-                resume_texts = []
-                for resume in resumes:
-                    if resume.filename:
+        # Collect resume texts from all sources
+        resume_texts = []
+
+        # Source 1: Pasted text
+        pasted_text = request.form.get("resume_text", "").strip()
+        if pasted_text:
+            resume_texts.append(pasted_text)
+            app.logger.info(f"Using pasted resume text, length: {len(pasted_text)}")
+
+        # Source 2: Uploaded files
+        resumes = request.files.getlist("resumes")
+        if resumes:
+            for resume in resumes:
+                if resume.filename and resume.filename != "":
+                    try:
                         path = os.path.join(app.config["UPLOAD_FOLDER"], resume.filename)
                         resume.save(path)
-                        resume_texts.append(extract_text(path))
-                if not resume_texts:
-                    return "Please paste resume text or upload a file", 400
-            else:
-                app.logger.warning("No resume text or file provided")
-                return "Please paste resume text", 400
-        else:
-            # Use pasted text directly
-            resume_texts = [resume_text]
-            app.logger.info("Using pasted resume text")
+                        app.logger.info(f"Processing uploaded file: {resume.filename}")
+                        file_text = extract_text(path)
+                        if file_text and file_text.strip():
+                            resume_texts.append(file_text)
+                            app.logger.info(f"Extracted text from file, length: {len(file_text)}")
+                    except Exception as e:
+                        app.logger.error(f"Failed to process file {resume.filename}: {e}")
 
+        # Validate: at least one resume source required
+        if not resume_texts:
+            app.logger.warning("No resume text or file provided")
+            return "Please upload a resume file or paste resume text", 400
+
+        # Process all resume texts
         conn = sqlite3.connect(DATABASE)
         cur = conn.cursor()
 
