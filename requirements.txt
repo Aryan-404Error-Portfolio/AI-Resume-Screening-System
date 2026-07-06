@@ -7,3 +7,4 @@ openpyxl
 flasgger
 python-dotenv
 gunicorn
+pytest
