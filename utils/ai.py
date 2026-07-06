@@ -33,7 +33,7 @@ else:
 
 MODEL_NAME = "gemini-2.5-flash"
 MAX_RETRIES = 3
-RETRY_DELAY = 35  # Free tier resets every ~60s, wait 35s between retries
+RETRY_DELAY = 10  # CHANGED: Was 35, now 10 to avoid Gunicorn timeout
 
 
 def clean_json(text):
@@ -58,7 +58,6 @@ def mock_extract_candidate(resume_text):
     skills_pool = ["Python", "JavaScript", "React", "Node.js", "SQL", "Machine Learning", 
                    "Docker", "AWS", "Git", "Flask", "Django", "TensorFlow", "Pandas", "Numpy"]
     
-    # Deterministic-ish based on resume length
     random.seed(len(resume_text))
     selected_skills = random.sample(skills_pool, k=random.randint(3, 6))
     
