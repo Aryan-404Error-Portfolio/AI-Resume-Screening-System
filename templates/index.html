@@ -9,112 +9,176 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        /* Loading Overlay */
+        #loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #loading-overlay.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #ffc107;
+            border-top: 4px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #ffc107;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .loading-subtext {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 
 <body class="bg-light">
 
-<div class="container py-5">
+    <!-- Loading Overlay -->
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Analyzing Resume with AI...</div>
+        <div class="loading-subtext">This may take 10-30 seconds</div>
+    </div>
 
-    <div class="card shadow-lg border-0">
+    <div class="container py-5">
 
-        <div class="card-header bg-primary text-white text-center">
-            <h2>AI Resume Screening System</h2>
-            <p class="mb-0">Upload resumes or paste text to compare with Job Description using AI</p>
-        </div>
+        <div class="card shadow-lg border-0">
 
-        <div class="card-body p-4">
+            <div class="card-header bg-primary text-white text-center">
+                <h2>AI Resume Screening System</h2>
+                <p class="mb-0">Upload resumes or paste text to compare with Job Description using AI</p>
+            </div>
 
-            <form action="{{ url_for('analyze') }}" method="POST" enctype="multipart/form-data">
+            <div class="card-body p-4">
 
-                <div class="mb-4">
+                <form action="{{ url_for('analyze') }}" method="POST" enctype="multipart/form-data" id="analyzeForm">
 
-                    <label class="form-label fw-bold">
-                        Upload Resume(s) (PDF/DOCX) — Optional
-                    </label>
-
-                    <input
-                        type="file"
-                        name="resumes"
-                        class="form-control"
-                        multiple
-                        accept=".pdf,.doc,.docx">
-
-                </div>
-
-                <div class="mb-4">
-
-                    <label class="form-label fw-bold">
-                        OR Paste Resume Text — Optional
-                    </label>
-
-                    <textarea
-                        class="form-control"
-                        name="resume_text"
-                        rows="6"
-                        placeholder="Paste resume text here if not uploading file..."></textarea>
-
-                </div>
-
-                <div class="mb-4">
-
-                    <label class="form-label fw-bold">
-                        Job Description
-                    </label>
-
-                    <textarea
-                        class="form-control"
-                        name="job_description"
-                        rows="8"
-                        placeholder="Paste the complete Job Description here..."
-                        required></textarea>
-
-                </div>
-
-                <div class="row">
-
-                    <div class="col-md-6 mb-3">
+                    <div class="mb-4">
 
                         <label class="form-label fw-bold">
-                            Filter Skill (Optional)
+                            Upload Resume(s) (PDF/DOCX) — Optional
                         </label>
 
                         <input
-                            type="text"
+                            type="file"
+                            name="resumes"
                             class="form-control"
-                            name="filter_skill"
-                            placeholder="Example: Python">
+                            multiple
+                            accept=".pdf,.doc,.docx">
 
                     </div>
 
-                    <div class="col-md-6 mb-3">
+                    <div class="mb-4">
 
                         <label class="form-label fw-bold">
-                            Minimum Match Score (Optional)
+                            OR Paste Resume Text — Optional
                         </label>
 
-                        <input
-                            type="number"
+                        <textarea
                             class="form-control"
-                            name="min_score"
-                            min="0"
-                            max="100"
-                            placeholder="Example: 70">
+                            name="resume_text"
+                            rows="6"
+                            placeholder="Paste resume text here if not uploading file..."></textarea>
 
                     </div>
 
-                </div>
+                    <div class="mb-4">
 
-                <button type="submit" class="btn btn-primary w-100 mt-3">
-                    Analyze Resume
-                </button>
+                        <label class="form-label fw-bold">
+                            Job Description
+                        </label>
 
-            </form>
+                        <textarea
+                            class="form-control"
+                            name="job_description"
+                            rows="8"
+                            placeholder="Paste the complete Job Description here..."
+                            required></textarea>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label fw-bold">
+                                Filter Skill (Optional)
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="filter_skill"
+                                placeholder="Example: Python">
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label fw-bold">
+                                Minimum Match Score (Optional)
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                name="min_score"
+                                min="0"
+                                max="100"
+                                placeholder="Example: 70">
+
+                        </div>
+
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 mt-3" id="analyzeBtn">
+                        Analyze Resume
+                    </button>
+
+                </form>
+
+            </div>
 
         </div>
 
     </div>
 
-</div>
+    <script>
+        document.getElementById('analyzeForm').addEventListener('submit', function() {
+            document.getElementById('loading-overlay').classList.add('active');
+            document.getElementById('analyzeBtn').disabled = true;
+            document.getElementById('analyzeBtn').innerText = 'Processing...';
+        });
+    </script>
 
 </body>
 </html>
