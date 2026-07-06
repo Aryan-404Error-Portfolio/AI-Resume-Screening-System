@@ -149,14 +149,20 @@ def home():
 def analyze():
     """
     Analyze uploaded resumes against job description.
+    Supports both file upload and pasted text fallback.
     ---
     parameters:
       - name: resumes
         in: formData
         type: file
-        required: true
+        required: false
         description: Resume files (PDF/DOCX)
         collectionFormat: multi
+      - name: resume_text
+        in: formData
+        type: string
+        required: false
+        description: Pasted resume text (fallback)
       - name: job_description
         in: formData
         type: string
@@ -184,7 +190,6 @@ def analyze():
         if not job_description:
             job_description = request.values.get("job_description", "")
         if not job_description:
-            # Try reading from request data directly
             job_description = request.args.get("job_description", "")
 
         app.logger.info(f"Job description length: {len(job_description)}")
@@ -195,26 +200,46 @@ def analyze():
             app.logger.warning("No job description provided")
             return "Job description is required", 400
 
-        if not resumes or all(r.filename == "" for r in resumes):
-            app.logger.warning("No resumes uploaded")
-            return "Please upload at least one resume", 400
-
         conn = sqlite3.connect(DATABASE)
         cur = conn.cursor()
 
         processed = 0
         failed = 0
+        resume_texts = []
 
-        for resume in resumes:
-            if resume.filename == "":
-                continue
+        # Check for uploaded files
+        has_files = resumes and any(r.filename for r in resumes)
+        
+        if has_files:
+            # Process uploaded files
+            for resume in resumes:
+                if resume.filename == "":
+                    continue
+                try:
+                    path = os.path.join(app.config["UPLOAD_FOLDER"], resume.filename)
+                    resume.save(path)
+                    app.logger.info(f"Processing uploaded resume: {resume.filename}")
+                    resume_texts.append(extract_text(path))
+                except Exception as e:
+                    app.logger.error(f"Failed to process file {resume.filename}: {e}")
+                    failed += 1
+        else:
+            # Fallback: use pasted resume text
+            pasted_text = request.form.get("resume_text", "")
+            if not pasted_text:
+                pasted_text = request.values.get("resume_text", "")
+            
+            if pasted_text and pasted_text.strip():
+                resume_texts.append(pasted_text)
+                app.logger.info("Using pasted resume text as fallback")
+                has_files = True  # Mark as having content
+            else:
+                app.logger.warning("No resumes uploaded or pasted")
+                return "Please upload a resume or paste resume text", 400
 
+        # Process each resume text
+        for resume_text in resume_texts:
             try:
-                path = os.path.join(app.config["UPLOAD_FOLDER"], resume.filename)
-                resume.save(path)
-                app.logger.info(f"Processing resume: {resume.filename}")
-
-                resume_text = extract_text(path)
                 candidate = extract_candidate_details(resume_text)
                 analysis = analyze_candidate(resume_text, job_description)
 
@@ -243,11 +268,11 @@ def analyze():
                     analysis.get("reason", "")
                 ))
                 processed += 1
-                app.logger.info(f"Successfully processed: {resume.filename}")
+                app.logger.info(f"Successfully processed resume")
 
             except Exception as e:
                 failed += 1
-                app.logger.error(f"Failed to process {resume.filename}: {e}")
+                app.logger.error(f"Failed to process resume: {e}")
                 continue
 
         conn.commit()
