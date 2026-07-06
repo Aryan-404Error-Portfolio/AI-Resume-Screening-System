@@ -226,4 +226,4 @@ Upload 2–3 sample resumes and provide a job description like:
 Developed as an Academic AI Project.
 
 - GitHub: [Aryan-404Error-Portfolio](https://github.com/Aryan-404Error-Portfolio)
-- Project: [AI-Resume-Screening-System](https://github.com/Error-Portfolio/AI-Resume-Screening-System)
+- Project: [AI-Resume-Screening-System](https://github.com/Aryan-404Error-Portfolio/AI-Resume-Screening-System)
