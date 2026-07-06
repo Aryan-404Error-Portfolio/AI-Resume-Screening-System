@@ -1,69 +1,185 @@
-body{
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #f4f6f9;
+/* ===== AI Resume Screening - Dark Theme (Black & Yellow) ===== */
+
+body {
+    background-color: #0d0d0d;
+    color: #f0f0f0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.container{
-    max-width: 1000px;
+/* ===== CARDS ===== */
+.card {
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(255, 193, 7, 0.1);
 }
 
-.card{
-    border-radius: 10px;
-    border: none;
-}
-
-.card-header{
-    border-radius: 10px 10px 0 0 !important;
-}
-
-h1,h2{
-    font-weight: 600;
-}
-
-label{
-    font-weight: 600;
-}
-
-.form-control{
-    border-radius: 6px;
-}
-
-.form-control:focus{
-    box-shadow: none;
-    border-color: #0d6efd;
-}
-
-.btn{
-    border-radius: 6px;
-    font-weight: 600;
-}
-
-.table{
-    margin-top: 20px;
-}
-
-.table th{
+.card-header {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    border-bottom: 2px solid #ffc107;
+    color: #ffc107;
     text-align: center;
-    vertical-align: middle;
+    padding: 1.5rem;
+    border-radius: 12px 12px 0 0;
 }
 
-.table td{
-    vertical-align: middle;
+.card-header h2 {
+    color: #ffc107;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
-.badge{
-    padding: 8px 12px;
-    font-size: 14px;
+.card-header p {
+    color: #aaa;
+    font-size: 0.95rem;
 }
 
-.text-success{
-    font-weight: 500;
+.card-body {
+    background-color: #1a1a1a;
+    padding: 2rem;
 }
 
-.text-danger{
-    font-weight: 500;
+/* ===== FORM LABELS ===== */
+.form-label {
+    color: #ffc107;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
 }
 
-.shadow{
-    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.12) !important;
+/* ===== INPUTS ===== */
+.form-control {
+    background-color: #2d2d2d;
+    border: 1px solid #444;
+    color: #f0f0f0;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    background-color: #333;
+    border-color: #ffc107;
+    color: #fff;
+    box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+}
+
+.form-control::placeholder {
+    color: #777;
+}
+
+/* ===== BUTTONS ===== */
+.btn-primary {
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    border: none;
+    color: #1a1a1a;
+    font-weight: 700;
+    padding: 0.875rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #ff9800 0%, #ffc107 100%);
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+}
+
+.btn-primary:disabled {
+    background: #444;
+    color: #888;
+    transform: none;
+    box-shadow: none;
+}
+
+/* ===== TABLE (Dashboard) ===== */
+.table {
+    background-color: #1a1a1a;
+    color: #f0f0f0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table thead {
+    background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+    color: #ffc107;
+}
+
+.table thead th {
+    border-bottom: 2px solid #ffc107;
+    font-weight: 600;
+    padding: 1rem;
+}
+
+.table tbody tr {
+    border-bottom: 1px solid #333;
+    transition: background-color 0.2s;
+}
+
+.table tbody tr:hover {
+    background-color: #2d2d2d;
+}
+
+.table td {
+    padding: 0.875rem 1rem;
+    color: #ddd;
+}
+
+/* ===== BADGES / SCORES ===== */
+.badge {
+    padding: 0.5rem 0.75rem;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.badge.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+.badge.bg-success {
+    background-color: #28a745 !important;
+}
+
+/* ===== LINKS ===== */
+a {
+    color: #ffc107;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: #ff9800;
+    text-decoration: underline;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #ffc107;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .btn-primary {
+        font-size: 0.9rem;
+    }
 }
