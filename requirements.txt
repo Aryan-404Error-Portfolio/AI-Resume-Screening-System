@@ -4,3 +4,6 @@ pdfplumber
 python-docx
 pandas
 openpyxl
+flasgger
+python-dotenv
+gunicorn
