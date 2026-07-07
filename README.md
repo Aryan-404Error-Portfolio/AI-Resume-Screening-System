@@ -122,7 +122,7 @@ plain
 ## Installation
 
 Clone the repository
-git clone https://github.com/Error-Portfolio/AI-Resume-Screening-System.git
+git clone https://github.com/Aryan-404Error-Portfolio/AI-Resume-Screening-System.git
 cd AI-Resume-Screening-System
 plain
 
