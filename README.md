@@ -2,7 +2,7 @@
 title: AI Resume Screening
 emoji: 🤖
 colorFrom: blue
-colorTo: purple
+colorTo: yellow
 sdk: docker
 app_file: app.py
 pinned: false
